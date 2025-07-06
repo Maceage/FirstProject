@@ -8,6 +8,8 @@
 
 struct FInputActionValue;
 class UInputAction;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class FIRSTPROJECT_API AFPCharacterBase : public ACharacter
@@ -31,6 +33,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> LookActions;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<USpringArmComponent> SpringArm;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	TObjectPtr<UCameraComponent> Camera;
+	
 	void DoMove(const FInputActionValue& value);
 	void DoJump(const FInputActionValue& value);
 	void DoLook(const FInputActionValue& value);

@@ -3,12 +3,20 @@
 
 #include "Core/FPCharacterBase.h"
 #include "EnhancedInputComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AFPCharacterBase::AFPCharacterBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	SpringArm->SetupAttachment(RootComponent);
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(SpringArm);
 }
 
 // Called when the game starts or when spawned
@@ -43,8 +51,11 @@ void AFPCharacterBase::DoLook(const FInputActionValue& value)
 {
 	const FVector2D look = value.Get<FVector2D>();
 
-	AddControllerPitchInput(look.Y);
-	AddControllerYawInput(look.X);
+	if (look.Length() != 0.0f)
+	{
+		AddControllerPitchInput(look.Y);
+		AddControllerYawInput(look.X);		
+	}
 }
 
 // Called every frame
@@ -62,7 +73,6 @@ void AFPCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		EnhancedInputComponent->BindAction(MoveActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoMove);
 		EnhancedInputComponent->BindAction(JumpActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoJump);
-
 		EnhancedInputComponent->BindAction(LookActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoLook);
 	}
 }
