@@ -11,6 +11,7 @@ AFPCharacterBase::AFPCharacterBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.SetTickFunctionEnable(true);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -35,9 +36,7 @@ void AFPCharacterBase::DoMove(const FInputActionValue& value)
 
 void AFPCharacterBase::DoJump(const FInputActionValue& value)
 {
-	const bool jump = value.Get<bool>();
-
-	if (jump)
+	if (value.Get<bool>())
 	{
 		Jump();
 	}
