@@ -3,28 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FPMeshActorBase.h"
 #include "GameFramework/Actor.h"
-#include "FPDoor.generated.h"
+#include "FPMeshActorBase.generated.h"
 
 UCLASS()
-class FIRSTPROJECT_API AFPDoor : public AFPMeshActorBase
+class FIRSTPROJECT_API AFPMeshActorBase : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AFPDoor();
+	AFPMeshActorBase();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Mesh")
+	TObjectPtr<UStaticMeshComponent> MeshComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Rotation")
-	FRotator RotationTarget;
-
-public:
-
-	void OpenDoor();
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 };

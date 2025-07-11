@@ -3,6 +3,7 @@
 
 #include "Core/FPCharacterBase.h"
 #include "EnhancedInputComponent.h"
+#include "Actors/FPLamp.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
@@ -12,7 +13,7 @@ AFPCharacterBase::AFPCharacterBase()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.SetTickFunctionEnable(true);
-	
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
 
@@ -26,7 +27,7 @@ void AFPCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AFPCharacterBase::DoMove(const FInputActionValue& value)
+void AFPCharacterBase::Move(const FInputActionValue& value)
 {
 	const FVector2D move = value.Get<FVector2D>();
 
@@ -34,26 +35,35 @@ void AFPCharacterBase::DoMove(const FInputActionValue& value)
 	AddMovementInput(GetActorRightVector() * move.Y);
 }
 
-void AFPCharacterBase::DoJump(const FInputActionValue& value)
-{
-	if (value.Get<bool>())
-	{
-		Jump();
-	}
-	else
-	{
-		StopJumping();
-	}
-}
-
-void AFPCharacterBase::DoLook(const FInputActionValue& value)
+void AFPCharacterBase::Look(const FInputActionValue& value)
 {
 	const FVector2D look = value.Get<FVector2D>();
 
 	if (look.Length() != 0.0f)
 	{
 		AddControllerPitchInput(look.Y);
-		AddControllerYawInput(look.X);		
+		AddControllerYawInput(look.X);
+	}
+}
+
+void AFPCharacterBase::Interact(const FInputActionValue& value)
+{
+	FHitResult OutHit;
+	FVector Start = Camera->GetComponentLocation();
+
+	FVector Forward = Camera->GetForwardVector();
+	FVector End = Start + Forward * 10000.0f;
+
+	FCollisionQueryParams CollisionQueryParams;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Orange, false, 1, 0, 1);
+
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionQueryParams))
+	{
+		if (AFPLamp* CurrentLamp = Cast<AFPLamp>(OutHit.GetActor()))
+		{
+			CurrentLamp->ToggleLamp();
+		}
 	}
 }
 
@@ -70,9 +80,12 @@ void AFPCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoMove);
-		EnhancedInputComponent->BindAction(JumpActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoJump);
-		EnhancedInputComponent->BindAction(LookActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::DoLook);
+		EnhancedInputComponent->BindAction(MoveActions, ETriggerEvent::Triggered, this, &AFPCharacterBase::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFPCharacterBase::Look);
+
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AFPCharacterBase::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AFPCharacterBase::StopJumping);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFPCharacterBase::Interact);
 	}
 }
-
