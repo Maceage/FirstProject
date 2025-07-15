@@ -47,8 +47,13 @@ void AFPCharacterBase::Look(const FInputActionValue& value)
 	}
 }
 
-void AFPCharacterBase::Interact(const FInputActionValue& value)
+void AFPCharacterBase::Interact()
 {
+	if (!bRunCppInput)
+	{
+		return;
+	}
+
 	FHitResult OutHit;
 	FVector Start = Camera->GetComponentLocation();
 
