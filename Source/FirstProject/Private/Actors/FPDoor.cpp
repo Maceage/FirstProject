@@ -10,10 +10,14 @@ AFPDoor::AFPDoor()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void AFPDoor::BeginPlay()
+void AFPDoor::Interact_Implementation()
 {
-	Super::BeginPlay();
+	OpenDoor();
+}
+
+bool AFPDoor::CanInteract_Implementation()
+{
+	return false;
 }
 
 void AFPDoor::OpenDoor()

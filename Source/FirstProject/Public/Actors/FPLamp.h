@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Actors/FPMeshActorBase.h"
+#include "Interfaces/Interact.h"
 #include "FPLamp.generated.h"
 
-class AFPBomb;
-class AFPDoor;
 UCLASS()
-class FIRSTPROJECT_API AFPLamp : public AFPMeshActorBase
+class FIRSTPROJECT_API AFPLamp : public AFPMeshActorBase, public IInteract
 {
 	GENERATED_BODY()
 
@@ -17,6 +16,10 @@ public:
 	
 	void ToggleLamp();
 
+	virtual void Interact_Implementation() override;
+
+	virtual bool CanInteract_Implementation() override;
+	
 protected:
 
 	virtual void BeginPlay() override;
@@ -24,10 +27,8 @@ protected:
 	TObjectPtr<UMaterialInstanceDynamic> CodeMaterialInst;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "References")
-	TObjectPtr<AFPDoor> CodeDoorRef;
+	TObjectPtr<AActor> CodeDoorRef;
 
 private:
-	TObjectPtr<AFPBomb> CodeBombRef;
-
 	bool CodeIsOn = false;
 };

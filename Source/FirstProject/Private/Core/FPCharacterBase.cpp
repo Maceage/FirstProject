@@ -3,9 +3,10 @@
 
 #include "Core/FPCharacterBase.h"
 #include "EnhancedInputComponent.h"
-#include "Actors/FPLamp.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Interfaces/Interact.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AFPCharacterBase::AFPCharacterBase()
@@ -60,9 +61,14 @@ void AFPCharacterBase::Interact(const FInputActionValue& value)
 
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionQueryParams))
 	{
-		if (AFPLamp* CurrentLamp = Cast<AFPLamp>(OutHit.GetActor()))
+		bool bValidInterface = UKismetSystemLibrary::DoesImplementInterface(OutHit.GetActor(), UInteract::StaticClass());
+
+		// Only check if Actor has Interface - will need a null ptr check on Actor before use
+		// bool bValidInterface = OutHit.GetActor()->GetClass()->ImplementsInterface(UInteract::StaticClass());
+
+		if (bValidInterface)
 		{
-			CurrentLamp->ToggleLamp();
+			IInteract::Execute_Interact(OutHit.GetActor());
 		}
 	}
 }
@@ -86,6 +92,6 @@ void AFPCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AFPCharacterBase::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AFPCharacterBase::StopJumping);
 
-		// EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFPCharacterBase::Interact);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFPCharacterBase::Interact);
 	}
 }

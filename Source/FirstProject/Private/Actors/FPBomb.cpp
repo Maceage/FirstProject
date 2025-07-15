@@ -15,6 +15,16 @@ void AFPBomb::StartIgnite()
 	HasBeenIgnited = true;
 }
 
+void AFPBomb::Interact_Implementation()
+{
+	StartIgnite();
+}
+
+bool AFPBomb::CanInteract_Implementation()
+{
+	return !HasBeenIgnited;
+}
+
 void AFPBomb::Explode()
 {
 	if (GEngine)

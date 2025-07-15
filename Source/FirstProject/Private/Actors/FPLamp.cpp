@@ -2,9 +2,6 @@
 
 
 #include "Actors/FPLamp.h"
-
-#include "Actors/FPBomb.h"
-#include "Actors/FPDoor.h"
 #include "Kismet/GameplayStatics.h"
 
 void AFPLamp::BeginPlay()
@@ -22,15 +19,35 @@ void AFPLamp::ToggleLamp()
 
 	if (CodeDoorRef)
 	{
-		CodeDoorRef->OpenDoor();
+		if (UKismetSystemLibrary::DoesImplementInterface(CodeDoorRef, UInteract::StaticClass()))
+		{
+			IInteract::Execute_Interact(CodeDoorRef);
+		}
 
 		CodeDoorRef = nullptr;
 	}
 
-	CodeBombRef = Cast<AFPBomb>(UGameplayStatics::GetActorOfClass(GetWorld(), AFPBomb::StaticClass()));
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), UInteract::StaticClass(), FoundActors);
 
-	if (CodeBombRef && !CodeBombRef->HasBeenIgnited)
+	for (auto FoundActor : FoundActors)
 	{
-		CodeBombRef->StartIgnite();
+		if (UKismetSystemLibrary::DoesImplementInterface(FoundActor, UInteract::StaticClass()))
+		{
+			if (IInteract::Execute_CanInteract(FoundActor))
+			{
+				IInteract::Execute_Interact(FoundActor);
+			}
+		}
 	}
+}
+
+void AFPLamp::Interact_Implementation()
+{
+	ToggleLamp();
+}
+
+bool AFPLamp::CanInteract_Implementation()
+{
+	return false;
 }
