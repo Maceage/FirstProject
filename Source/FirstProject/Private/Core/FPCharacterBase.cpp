@@ -86,6 +86,6 @@ void AFPCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AFPCharacterBase::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AFPCharacterBase::StopJumping);
 
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFPCharacterBase::Interact);
+		// EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFPCharacterBase::Interact);
 	}
 }
