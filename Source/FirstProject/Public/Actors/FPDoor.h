@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FPLamp.h"
 #include "FPMeshActorBase.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/Interact.h"
@@ -16,6 +17,11 @@ class FIRSTPROJECT_API AFPDoor : public AFPMeshActorBase, public IInteract
 public:
 	// Sets default values for this actor's properties
 	AFPDoor();
+	
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Actor Reference")
+	TObjectPtr<AFPLamp> LampRefCpp;
 
 	virtual void Interact_Implementation() override;
 
@@ -27,6 +33,11 @@ protected:
 
 public:
 
+	UFUNCTION()
 	void OpenDoor();
 
+private:
+
+	bool IsOpen = false;
+	
 };

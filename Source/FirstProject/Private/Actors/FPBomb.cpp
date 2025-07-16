@@ -3,8 +3,26 @@
 
 #include "Actors/FPBomb.h"
 
+#include "Actors/FPDoor.h"
+#include "Actors/FPLamp.h"
+
+void AFPBomb::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (LampRefCpp)
+	{
+		LampRefCpp->OnLightSwitchedOnDelegate.AddUniqueDynamic(this, &AFPBomb::StartIgnite);
+	}
+}
+
 void AFPBomb::StartIgnite()
 {
+	if (HasBeenIgnited)
+	{
+		return;
+	}
+	
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, TEXT("FzzzzzZZZZzzz!"));

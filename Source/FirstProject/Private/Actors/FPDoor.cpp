@@ -10,6 +10,16 @@ AFPDoor::AFPDoor()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AFPDoor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (LampRefCpp)
+	{
+		LampRefCpp->OnLightSwitchedOnDelegate.AddUniqueDynamic(this, &AFPDoor::OpenDoor);
+	}
+}
+
 void AFPDoor::Interact_Implementation()
 {
 	OpenDoor();
@@ -22,5 +32,12 @@ bool AFPDoor::CanInteract_Implementation()
 
 void AFPDoor::OpenDoor()
 {
+	if (IsOpen)
+	{
+		return;
+	}
+	
 	SetActorRotation(RotationTarget);
+
+	IsOpen = true;
 }

@@ -2,7 +2,6 @@
 
 
 #include "Actors/FPLamp.h"
-#include "Kismet/GameplayStatics.h"
 
 void AFPLamp::BeginPlay()
 {
@@ -17,28 +16,9 @@ void AFPLamp::ToggleLamp()
 
 	CodeMaterialInst->SetScalarParameterValue(TEXT("EmissiveStrength"), CodeIsOn ? 20.0f : 0.0f);
 
-	if (CodeDoorRef)
+	if (CodeIsOn)
 	{
-		if (UKismetSystemLibrary::DoesImplementInterface(CodeDoorRef, UInteract::StaticClass()))
-		{
-			IInteract::Execute_Interact(CodeDoorRef);
-		}
-
-		CodeDoorRef = nullptr;
-	}
-
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), UInteract::StaticClass(), FoundActors);
-
-	for (auto FoundActor : FoundActors)
-	{
-		if (UKismetSystemLibrary::DoesImplementInterface(FoundActor, UInteract::StaticClass()))
-		{
-			if (IInteract::Execute_CanInteract(FoundActor))
-			{
-				IInteract::Execute_Interact(FoundActor);
-			}
-		}
+		OnLightSwitchedOnDelegate.Broadcast();
 	}
 }
 
