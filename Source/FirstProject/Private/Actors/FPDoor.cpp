@@ -30,14 +30,7 @@ bool AFPDoor::CanInteract_Implementation()
 	return false;
 }
 
-void AFPDoor::OpenDoor()
+void AFPDoor::OpenDoor_Implementation()
 {
-	if (IsOpen)
-	{
-		return;
-	}
-	
-	SetActorRotation(RotationTarget);
-
-	IsOpen = true;
+	IsOpen = !IsOpen;
 }

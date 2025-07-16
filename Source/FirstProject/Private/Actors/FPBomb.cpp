@@ -10,32 +10,25 @@ void AFPBomb::BeginPlay()
 {
 	Super::BeginPlay();
 
+	MaterialInst = MeshComp->CreateAndSetMaterialInstanceDynamic(0);
+	
 	if (LampRefCpp)
 	{
-		LampRefCpp->OnLightSwitchedOnDelegate.AddUniqueDynamic(this, &AFPBomb::StartIgnite);
+		LampRefCpp->OnLightSwitchedOnDelegate.AddUniqueDynamic(this, &AFPBomb::Interact);
 	}
 }
 
-void AFPBomb::StartIgnite()
+void AFPBomb::StartIgnite_Implementation()
 {
-	if (HasBeenIgnited)
-	{
-		return;
-	}
-	
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, TEXT("FzzzzzZZZZzzz!"));
-	}
-
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AFPBomb::Explode, 2.0f, false);
-
 	HasBeenIgnited = true;
 }
 
 void AFPBomb::Interact_Implementation()
 {
-	StartIgnite();
+	if (!HasBeenIgnited)
+	{
+		StartIgnite();
+	}
 }
 
 bool AFPBomb::CanInteract_Implementation()

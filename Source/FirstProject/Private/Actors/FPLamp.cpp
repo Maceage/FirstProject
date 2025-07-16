@@ -12,14 +12,11 @@ void AFPLamp::BeginPlay()
 
 void AFPLamp::ToggleLamp()
 {
-	CodeIsOn = !CodeIsOn;
+	IsOn = !IsOn;
 
-	CodeMaterialInst->SetScalarParameterValue(TEXT("EmissiveStrength"), CodeIsOn ? 20.0f : 0.0f);
+	CodeMaterialInst->SetScalarParameterValue(TEXT("EmissiveStrength"), IsOn ? 20.0f : 0.0f);
 
-	if (CodeIsOn)
-	{
-		OnLightSwitchedOnDelegate.Broadcast();
-	}
+	OnLightSwitchedOnDelegate.Broadcast();
 }
 
 void AFPLamp::Interact_Implementation()

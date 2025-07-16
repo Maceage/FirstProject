@@ -49,11 +49,6 @@ void AFPCharacterBase::Look(const FInputActionValue& value)
 
 void AFPCharacterBase::Interact()
 {
-	if (!bRunCppInput)
-	{
-		return;
-	}
-
 	FHitResult OutHit;
 	FVector Start = Camera->GetComponentLocation();
 
@@ -67,9 +62,6 @@ void AFPCharacterBase::Interact()
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionQueryParams))
 	{
 		bool bValidInterface = UKismetSystemLibrary::DoesImplementInterface(OutHit.GetActor(), UInteract::StaticClass());
-
-		// Only check if Actor has Interface - will need a null ptr check on Actor before use
-		// bool bValidInterface = OutHit.GetActor()->GetClass()->ImplementsInterface(UInteract::StaticClass());
 
 		if (bValidInterface)
 		{

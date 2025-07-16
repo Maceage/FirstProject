@@ -16,8 +16,6 @@ class FIRSTPROJECT_API AFPLamp : public AFPMeshActorBase, public IInteract
 
 public:
 	
-	void ToggleLamp();
-
 	virtual void Interact_Implementation() override;
 
 	virtual bool CanInteract_Implementation() override;
@@ -28,9 +26,12 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
-	
-	TObjectPtr<UMaterialInstanceDynamic> CodeMaterialInst;
 
 private:
-	bool CodeIsOn = false;
+	
+	bool IsOn = false;
+
+	TObjectPtr<UMaterialInstanceDynamic> CodeMaterialInst;
+
+	void ToggleLamp();
 };
