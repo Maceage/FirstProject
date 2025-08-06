@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FPLamp.h"
+#include "NiagaraSystem.h"
 #include "Actors/FPMeshActorBase.h"
 #include "Interfaces/Interact.h"
 #include "FPBomb.generated.h"
@@ -36,6 +37,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Actor Reference", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AFPLamp> LampRefCpp;
 
+	UPROPERTY(EditAnywhere, Category = "Explosion", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UNiagaraSystem> ExplosionEffect;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ignition", meta = (AllowPrivateAccess = "true"))
 	float IgnitionDuration = 2.0f;
 	

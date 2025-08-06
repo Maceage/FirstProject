@@ -3,6 +3,7 @@
 
 #include "Actors/FPBomb.h"
 
+#include "NiagaraFunctionLibrary.h"
 #include "Actors/FPDoor.h"
 #include "Actors/FPLamp.h"
 
@@ -41,6 +42,11 @@ void AFPBomb::Explode()
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Orange, TEXT("Boom!"));
+	}
+
+	if (ExplosionEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
 	}
 
 	Destroy();
