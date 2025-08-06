@@ -39,6 +39,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Explosion", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Explosion", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USoundBase> ExplosionSound;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ignition", meta = (AllowPrivateAccess = "true"))
 	float IgnitionDuration = 2.0f;

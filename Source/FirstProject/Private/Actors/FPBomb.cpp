@@ -6,6 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Actors/FPDoor.h"
 #include "Actors/FPLamp.h"
+#include "Kismet/GameplayStatics.h"
 
 void AFPBomb::BeginPlay()
 {
@@ -47,6 +48,11 @@ void AFPBomb::Explode()
 	if (ExplosionEffect)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+	}
+
+	if (ExplosionSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
 	}
 
 	Destroy();
